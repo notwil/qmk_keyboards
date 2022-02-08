@@ -13,6 +13,7 @@ It's a DIY, QMK Powered Trackball...Nano!
 
 Make example for this trackball (after setting up your build environment):
 
+	qmk compile -kb ploopyco/trackball_nano/rev1_002 -km scroll
     make ploopyco/trackball_nano/rev1_001:default:flash
     make ploopyco/trackball_nano/rev1_001:via:flash
 
