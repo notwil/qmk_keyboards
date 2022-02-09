@@ -1,0 +1,51 @@
+{
+  "name": "YMDK YMD09",
+  "vendorProductId": 1498235913,
+  "macros": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  "layers": [
+    [
+      "C(KC_PGUP)",
+      "C(KC_W)",
+      "C(KC_PGDN)",
+      "KC_MS_BTN4",
+      "KC_LSCR",
+      "KC_MS_BTN5",
+      "KC_MS_BTN1",
+      "KC_MS_BTN3",
+      "KC_MS_BTN2"
+    ],
+    [
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO"
+    ],
+    [
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO"
+    ],
+    [
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO",
+      "KC_NO"
+    ]
+  ]
+}

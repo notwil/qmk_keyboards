@@ -35,7 +35,7 @@
 #ifndef OPT_SCALE
 #    define OPT_SCALE 1  // Multiplier for wheel
 #endif
-//# Have tried fiddling around with these but it doesn't seem to do anything...
+
 #ifndef PLOOPY_DPI_OPTIONS
 #    define PLOOPY_DPI_OPTIONS \
         { 375, 750, 1375 }
@@ -49,8 +49,6 @@
 #endif
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = { };
-
-// Transformation constants for delta-X and delta-Y
 const static float ADNS_X_TRANSFORM = -1.0;
 const static float ADNS_Y_TRANSFORM = 1.0;
 
@@ -58,12 +56,6 @@ keyboard_config_t keyboard_config;
 uint16_t          dpi_array[] = PLOOPY_DPI_OPTIONS;
 #define DPI_OPTION_SIZE (sizeof(dpi_array) / sizeof(uint16_t))
 
-// TODO: Implement libinput profiles
-// https://wayland.freedesktop.org/libinput/doc/latest/pointer-acceleration.html
-// Compile time accel selection
-// Valid options are ACC_NONE, ACC_LINEAR, ACC_CUSTOM, ACC_QUADRATIC
-
-// Trackball State
 bool is_scroll_clicked = false;
 bool BurstState = false;  // init burst state for Trackball module
 uint16_t MotionStart = 0;  // Timer for accel, 0 is resting state
@@ -72,7 +64,6 @@ uint16_t lastMidClick = 0;  // Stops scrollwheel from being read if it was press
 bool debug_encoder = false;
 
 void pointing_device_init_kb(void) {
-    // set the DPI.
     pointing_device_set_cpi(dpi_array[keyboard_config.dpi_config]);
 }
 
@@ -86,19 +77,8 @@ __attribute__((weak)) void process_mouse(report_mouse_t* mouse_report) {
     if (data.dx != 0 || data.dy != 0) {
         if (debug_mouse)
             dprintf("Raw ] X: %d, Y: %d\n", data.dx, data.dy);
-
-        // Apply delta-X and delta-Y transformations.
-        // x and y are swapped
-        // the sensor is rotated
-        // by 90 degrees
         float xt = (float) data.dy * ADNS_X_TRANSFORM;
         float yt = (float) data.dx * ADNS_Y_TRANSFORM;
-
-
-        //# Rewrote this to send floats to user side
-        // int16_t xti = (int16_t)xt;
-        // int16_t yti = (int16_t)yt;
-
         process_mouse_user(mouse_report, xt, yt);
     }
 }
@@ -110,14 +90,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
         lastMidClick = timer_read();
         is_scroll_clicked = record->event.pressed;
     }
-	
     if (!process_record_user(keycode, record))
         return false;
-
     return true;
 }
 
-// Hardware Setup
 void keyboard_pre_init_kb(void) {
     debug_enable = true;
     debug_keyboard = true;
@@ -132,7 +109,6 @@ void keyboard_pre_init_kb(void) {
      */
 #ifdef UNUSED_PINS
     const pin_t unused_pins[] = UNUSED_PINS;
-
     for (uint8_t i = 0; i < (sizeof(unused_pins) / sizeof(pin_t)); i++) {
         setPinOutput(unused_pins[i]);
         writePinLow(unused_pins[i]);
@@ -144,13 +120,7 @@ void keyboard_pre_init_kb(void) {
 
 void pointing_device_init(void) {
     adns5050_init();
-    // wait maximum time before adns is ready.
-    // this ensures that the adns is actuall ready after reset.
     wait_ms(55);
-
-    // read a burst from the adns and then discard it.
-    // gets the adns ready for write commands
-    // (for example, setting the dpi).
     adns5050_read_burst();
     adns5050_set_cpi(dpi_array[keyboard_config.dpi_config]);
 }
@@ -169,8 +139,6 @@ void eeconfig_init_kb(void) {
 }
 
 void matrix_init_kb(void) {
-    // is safe to just read DPI setting since matrix init
-    // comes before pointing device init.
     keyboard_config.raw = eeconfig_read_kb();
     if (keyboard_config.dpi_config > DPI_OPTION_SIZE) {
         eeconfig_init_kb();
