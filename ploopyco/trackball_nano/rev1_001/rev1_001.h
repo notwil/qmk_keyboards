@@ -19,4 +19,4 @@
 
 #pragma once
 
-#include "trackball_mini.h"
+#include "trackball_nano.h"
